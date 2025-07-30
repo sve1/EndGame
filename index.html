@@ -1,0 +1,1666 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENDGAME 🎮 v6.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #0a0a0a;
+            --secondary-bg: #1a1a1a;
+            --card-bg: #2a2a2a;
+            --accent-color: #6366f1;
+            --accent-hover: #5855eb;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --border-color: #3f3f46;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --star-color: #fbbf24;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, #1a1a2e 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .medal-counter {
+            margin-bottom: 2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--card-bg);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+            font-weight: 500;
+        }
+
+        .search-section {
+            width: 100%;
+            max-width: 800px;
+            background: var(--secondary-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+        }
+
+        .search-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 0.875rem 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .search-button {
+            padding: 0.875rem 2rem;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .search-button:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .game-select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .game-select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        /* Layout em Grid Estilo Pinterest */
+        .columns-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            align-items: start;
+            width: 100%;
+            margin-bottom: 2rem; /* Add margin below columns */
+        }
+
+        .column {
+            background: var(--secondary-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            transition: all 0.2s ease;
+        }
+
+        .column:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .column h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        .game-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            break-inside: avoid;
+            height: fit-content;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent-color);
+        }
+
+        .game-card.currently-playing {
+            border-color: var(--success-color);
+            box-shadow: 0 0 0 1px var(--success-color);
+        }
+
+        .game-card.currently-playing::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--success-color), #34d399);
+        }
+
+        .game-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(99, 102, 241, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .game-card:hover::after {
+            opacity: 1;
+        }
+
+        .game-image {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .game-card:hover .game-image {
+            transform: scale(1.05);
+            filter: brightness(0.9);
+        }
+
+        .game-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            line-height: 1.4;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Sistema de Avaliação com Estrelas */
+        .rating-section {
+            margin: 1rem 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .rating-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 0.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .star {
+            font-size: 1.2rem;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .star:hover,
+        .star.active {
+            color: var(--star-color);
+            transform: scale(1.1);
+        }
+
+        .star:hover {
+            text-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+        }
+
+        /* Campo de Observações */
+        .notes-section {
+            margin: 1rem 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .notes-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .notes-textarea {
+            width: 100%;
+            min-height: 60px;
+            max-height: 120px;
+            padding: 0.5rem;
+            background: var(--primary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-family: inherit;
+            resize: vertical;
+            transition: all 0.2s ease;
+        }
+
+        .notes-textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+        }
+
+        .notes-textarea::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        .char-counter {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-align: right;
+            margin-top: 0.25rem;
+        }
+
+        .game-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            flex: 1;
+            justify-content: center;
+            min-width: 0;
+        }
+
+        .btn-remove {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-remove:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        .btn-playing {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-playing:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+
+        .btn-playing.active {
+            background: var(--warning-color);
+        }
+
+        .btn-playing.active:hover {
+            background: #d97706;
+        }
+
+        .btn-finish {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-finish:hover {
+            background: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Drag and drop styles */
+        .column.drag-over {
+            border-color: var(--accent-color);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .game-card.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .search-container {
+                flex-direction: column;
+            }
+
+            .columns-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .game-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                flex: none;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .games-grid {
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Smooth transitions */
+        * {
+            transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: var(--secondary-bg);
+            margin: auto;
+            padding: 2.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            max-width: 900px;
+            width: 100%;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            animation: fadeIn 0.3s ease-out;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close-button {
+            color: var(--text-secondary);
+            font-size: 1.8rem;
+            font-weight: bold;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: var(--text-primary);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-game-image {
+            width: 200px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            flex-shrink: 0;
+        }
+
+        .modal-game-info {
+            flex-grow: 1;
+        }
+
+        .modal-game-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .modal-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .modal-detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .modal-detail-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-detail-value {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+
+        .modal-genre-tags, .modal-platform-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .modal-genre-tag, .modal-platform-tag {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.3rem 0.7rem;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .modal-platform-tag {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .modal-description-section h3, .modal-screenshots-section h3, .modal-trailers-section h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+        }
+
+        .modal-description-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-screenshot-item {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s ease;
+        }
+
+        .modal-screenshot-item:hover {
+            transform: scale(1.03);
+        }
+
+        .modal-trailers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-trailer-item {
+            width: 100%;
+            height: 180px;
+            border-radius: 8px;
+            border: none;
+            box-shadow: var(--shadow);
+        }
+
+        /* New Suggestions Section styles */
+        .suggestions-main-section {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto 2rem auto; /* Center and add bottom margin */
+            background: var(--secondary-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+        }
+
+        .suggestions-main-section h2 {
+            font-size: 1.6rem; /* Slightly larger heading for main section */
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .suggestions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjusted for smaller cards */
+            gap: 1.5rem;
+        }
+
+        .suggestion-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            height: fit-content;
+        }
+
+        .suggestion-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent-color);
+        }
+
+        .suggestion-image {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+        }
+
+        .suggestion-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex-grow: 1;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .suggestion-add-button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .suggestion-add-button:hover {
+            background: var(--accent-hover);
+        }
+
+        @media (max-width: 768px) {
+            .modal-content {
+                padding: 1.5rem;
+            }
+
+            .modal-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .modal-game-image {
+                width: 150px;
+                height: 200px;
+            }
+
+            .modal-game-title {
+                font-size: 1.6rem;
+            }
+
+            .modal-details-grid, .modal-screenshots-grid, .modal-trailers-grid, .suggestions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .suggestions-main-section {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+
+  <!-- Manifesto PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#000000">
+  <meta name="background-color" content="#000000">
+
+  <!-- Para iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+
+</head>
+<body>
+    <div id="gameLists">
+        <div class="container">
+            <div class="medal-counter">
+                <i class="fas fa-trophy"></i>
+                <span id="medalCount">0</span>
+                <span>jogos finalizados</span>
+            </div>
+
+            <section class="search-section">
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar jogos...">
+                    <button onclick="searchGame()" class="search-button">
+                        <i class="fas fa-search"></i>
+                        Buscar
+                    </button>
+                </div>
+                
+                <select id="gameSelect" class="game-select hidden" onchange="selectGame()">
+                    <option value="">Selecione um jogo...</option>
+                </select>
+            </section>
+
+            <main class="columns-container">
+                <div class="column" id="jogos-a-jogar-section" ondrop="drop(event, 'jogos-a-jogar')" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)">
+                    <h2><i class="fas fa-gamepad"></i> Para Jogar</h2>
+                    <div class="games-grid" id="jogos-a-jogar">
+                        <div class="empty-state" id="empty-to-play">
+                            <i class="fas fa-plus-circle"></i>
+                            <p>Adicione jogos que você quer jogar</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="column" id="finalizados-section" ondrop="drop(event, 'finalizados')" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)">
+                    <h2><i class="fas fa-trophy"></i> Finalizados</h2>
+                    <div class="games-grid" id="finalizados">
+                        <div class="empty-state" id="empty-finished">
+                            <i class="fas fa-check-circle"></i>
+                            <p>Jogos que você já terminou aparecerão aqui</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <section class="suggestions-main-section">
+                <h2><i class="fas fa-lightbulb"></i> Jogos Sugeridos</h2>
+                <div id="generalSuggestedGamesGrid" class="suggestions-grid">
+                    <div class="empty-state" id="empty-general-suggestions" style="display: block;">
+                        <i class="fas fa-sync fa-spin"></i>
+                        <p>Carregando sugestões...</p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <div id="gameDetailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <div class="modal-header">
+                <img id="modalGameImage" src="" alt="Game Image" class="modal-game-image">
+                <div class="modal-game-info">
+                    <h2 id="modalGameTitle" class="modal-game-title"></h2>
+                    <div class="modal-details-grid">
+                        <div class="modal-detail-item">
+                            <span class="modal-detail-label">Lançamento</span>
+                            <span id="modalGameReleased" class="modal-detail-value"></span>
+                        </div>
+                        <div class="modal-detail-item">
+                            <span class="modal-detail-label">Metacritic</span>
+                            <span id="modalGameMetacritic" class="modal-detail-value"></span>
+                        </div>
+                        <div class="modal-detail-item">
+                            <span class="modal-detail-label">Desenvolvedores</span>
+                            <span id="modalGameDevelopers" class="modal-detail-value"></span>
+                        </div>
+                        <div class="modal-detail-item">
+                            <span class="modal-detail-label">Publicadoras</span>
+                            <span id="modalGamePublishers" class="modal-detail-value"></span>
+                        </div>
+                        <div class="modal-detail-item" style="grid-column: 1 / -1;">
+                            <span class="modal-detail-label">Gêneros</span>
+                            <div id="modalGameGenres" class="modal-genre-tags"></div>
+                        </div>
+                        <div class="modal-detail-item" style="grid-column: 1 / -1;">
+                            <span class="modal-detail-label">Plataformas</span>
+                            <div id="modalGamePlatforms" class="modal-platform-tags"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-description-section">
+                <h3>Descrição</h3>
+                <p id="modalGameDescription" class="modal-description-text"></p>
+            </div>
+
+            <div class="modal-screenshots-section hidden">
+                <h3>Imagens</h3>
+                <div id="modalGameScreenshots" class="modal-screenshots-grid"></div>
+            </div>
+
+            <div class="modal-trailers-section hidden">
+                <h3>Trailers</h3>
+                <div id="modalGameTrailers" class="modal-trailers-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = '4193f734e2f1493cb033d60b1363edfe'; // Sua chave da API RAWG
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            loadGamesFromStorage();
+            updateMedalCount();
+            updateEmptyStates();
+            loadGeneralSuggestions(); // Carrega sugestões ao iniciar
+        });
+
+        // Gerenciamento de medalhas
+        function addMedal() {
+            const medalCount = parseInt(localStorage.getItem('medalCount')) || 0;
+            localStorage.setItem('medalCount', medalCount + 1);
+            updateMedalCount();
+        }
+
+        function removeMedal() {
+            const medalCount = parseInt(localStorage.getItem('medalCount')) || 0;
+            if (medalCount > 0) {
+                localStorage.setItem('medalCount', medalCount - 1);
+                updateMedalCount();
+            }
+        }
+
+        function updateMedalCount() {
+            const medalCountElement = document.getElementById('medalCount');
+            const medalCount = parseInt(localStorage.getItem('medalCount')) || 0;
+            medalCountElement.textContent = medalCount;
+        }
+
+        // Busca de jogos
+        function searchGame() {
+            const searchInput = document.getElementById("searchInput");
+            const searchButton = document.querySelector('.search-button');
+            const gameSelect = document.getElementById('gameSelect');
+            
+            if (!searchInput.value.trim()) return;
+
+            // Mostrar loading
+            searchButton.innerHTML = '<div class="loading"></div> Buscando...';
+            searchButton.disabled = true;
+
+            const url = `https://api.rawg.io/api/games?search=${encodeURIComponent(searchInput.value)}&key=${API_KEY}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const games = data.results;
+                    gameSelect.innerHTML = '<option value="">Selecione um jogo...</option>';
+
+                    if (games.length > 0) {
+                        games.forEach(game => {
+                            const option = document.createElement('option');
+                            option.value = game.id;
+                            option.textContent = game.name;
+                            gameSelect.appendChild(option);
+                        });
+                        gameSelect.classList.remove("hidden");
+                    } else {
+                        gameSelect.classList.add("hidden");
+                        alert('Nenhum jogo encontrado para sua busca.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao realizar a pesquisa:', error);
+                    alert('Erro ao buscar jogos. Tente novamente.');
+                })
+                .finally(() => {
+                    searchButton.innerHTML = '<i class="fas fa-search"></i> Buscar';
+                    searchButton.disabled = false;
+                });
+        }
+
+        // Seleção de jogo
+        function selectGame() {
+            const gameId = document.getElementById('gameSelect').value;
+            if (!gameId) return;
+
+            const url = `https://api.rawg.io/api/games/${gameId}?key=${API_KEY}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(game => {
+                    const gameData = {
+                        id: game.id,
+                        name: game.name,
+                        image: game.background_image,
+                        description: game.description_raw || 'Descrição não disponível',
+                        released: game.released || 'Data não disponível',
+                        rating: game.rating || 0, // RAWG rating (not user rating)
+                        metacritic: game.metacritic || 'N/A',
+                        genres: game.genres ? game.genres.map(g => g.name) : [],
+                        platforms: game.platforms ? game.platforms.map(p => p.platform.name) : [],
+                        developers: game.developers ? game.developers.map(d => d.name) : [],
+                        publishers: game.publishers ? game.publishers.map(p => p.name) : []
+                    };
+                    
+                    addGameToColumn(gameData, 'jogos-a-jogar');
+                    document.getElementById('gameSelect').value = '';
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar detalhes do jogo:', error);
+                    alert('Erro ao adicionar jogo. Tente novamente.');
+                });
+        }
+
+        // Adicionar jogo à coluna
+        function addGameToColumn(gameData, columnId) {
+            // Verificar se o jogo já existe em qualquer coluna usando o ID
+            const existingGameInToPlay = document.querySelector(`#jogos-a-jogar .game-card[data-game-id="${gameData.id}"]`);
+            const existingGameInFinished = document.querySelector(`#finalizados .game-card[data-game-id="${gameData.id}"]`);
+            // Also check if the game exists in the general suggestions section
+            const existingGameInSuggestions = document.querySelector(`#generalSuggestedGamesGrid .suggestion-card[data-game-id="${gameData.id}"]`); // Note the class change to 'suggestion-card'
+
+            if (existingGameInToPlay || existingGameInFinished || existingGameInSuggestions) {
+                alert("Este jogo já foi adicionado!");
+                return;
+            }
+
+            const gameCard = createGameCard(gameData, columnId === "finalizados");
+            document.getElementById(columnId).appendChild(gameCard);
+            
+            saveGamesToStorage();
+            updateEmptyStates();
+        }
+
+        // Criar card do jogo
+        function createGameCard(gameData, isFinished = false, userRating = 0, userNotes = '') {
+            const gameCard = document.createElement('div');
+            gameCard.classList.add('game-card');
+            gameCard.draggable = true;
+            gameCard.dataset.gameId = gameData.id;
+            
+            // Store original gameData (from API) for modal
+            gameCard.dataset.gameOriginalData = JSON.stringify(gameData); 
+
+            if (isFinished) {
+                gameCard.dataset.finished = 'true';
+            } else {
+                gameCard.dataset.finished = 'false';
+            }
+
+            // Bind click event to open modal
+            gameCard.addEventListener('click', function(event) {
+                // Prevent modal from opening if a button inside the card is clicked
+                if (event.target.closest('.game-actions') || event.target.closest('.notes-textarea') || event.target.closest('.star')) {
+                    return; 
+                }
+                openModal(gameData.id);
+            });
+
+            gameCard.ondragstart = function(event) {
+                event.dataTransfer.setData("text/plain", gameData.id);
+                gameCard.classList.add("dragging");
+            };
+
+            gameCard.ondragend = function() {
+                gameCard.classList.remove("dragging");
+            };
+
+            const ratingSection = isFinished ? `
+                <div class="rating-section">
+                    <label class="rating-label">Sua avaliação:</label>
+                    <div class="star-rating" data-rating="${userRating}">
+                        <span class="star" data-value="1">★</span>
+                        <span class="star" data-value="2">★</span>
+                        <span class="star" data-value="3">★</span>
+                        <span class="star" data-value="4">★</span>
+                        <span class="star" data-value="5">★</span>
+                    </div>
+                </div>
+            ` : '';
+
+            gameCard.innerHTML = `
+                <img src="${gameData.image}" alt="${gameData.name}" class="game-image" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE2MCIgdmlld0JveD0iMCAwIDIwMCAxNjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMTYwIiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjEwMCIgeT0iODAiIGZpbGw9IiM2NjYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCI+SW1hZ2VtIG7Do28gZW5jb250cmFkYTwvdGV4dD4KPC9zdmc+'>
+                <div class="game-title">${gameData.name}</div>
+                
+                ${ratingSection}
+                
+                <div class="notes-section">
+                    <label class="notes-label">Observações pessoais:</label>
+                    <textarea class="notes-textarea" placeholder="Adicione suas anotações sobre o jogo..." maxlength="200" oninput="updateCharCounter(this)"></textarea>
+                    <div class="char-counter">0/200</div>
+                </div>
+                
+                <div class="game-actions">
+                    <button class="btn btn-playing" onclick="togglePlaying(this)">
+                        <i class="fas fa-play"></i>
+                        <span>Jogando</span>
+                    </button>
+                    <button class="btn btn-remove" onclick="removeGame(this)">
+                        <i class="fas fa-trash"></i>
+                        <span>Remover</span>
+                    </button>
+                    <button class="btn btn-finish" onclick="markAsFinished(this)">
+                        <i class="fas fa-check"></i>
+                        <span>Finalizar</span>
+                    </button>
+                </div>
+            `;
+
+            // Set initial notes value and update counter
+            const notesTextarea = gameCard.querySelector('.notes-textarea');
+            if (notesTextarea) {
+                notesTextarea.value = userNotes;
+                updateCharCounter(notesTextarea);
+            }
+
+            // Add event listeners for stars if it's a finished game
+            if (isFinished) {
+                const stars = gameCard.querySelectorAll('.star');
+                const starRatingContainer = gameCard.querySelector('.star-rating');
+                
+                stars.forEach(star => {
+                    star.addEventListener('click', function() {
+                        setRating(this);
+                    });
+                    star.addEventListener('mouseover', function() {
+                        highlightStars(this);
+                    });
+                });
+
+                if (starRatingContainer) {
+                    starRatingContainer.addEventListener('mouseleave', function() {
+                        resetStarHighlight(this);
+                    });
+                    // Set initial active stars based on userRating
+                    resetStarHighlight(starRatingContainer);
+                }
+            }
+
+            return gameCard;
+        }
+
+        // Sistema de avaliação com estrelas
+        function setRating(clickedStar) {
+            const starRating = clickedStar.parentElement;
+            const rating = parseInt(clickedStar.dataset.value);
+            const stars = starRating.querySelectorAll('.star');
+            
+            starRating.dataset.rating = rating;
+            
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+            
+            saveGamesToStorage();
+        }
+
+        function highlightStars(hoveredStar) {
+            const starRating = hoveredStar.parentElement;
+            const hoverValue = parseInt(hoveredStar.dataset.value);
+            const stars = starRating.querySelectorAll('.star');
+            
+            stars.forEach((star, index) => {
+                if (index < hoverValue) {
+                    star.style.color = 'var(--star-color)';
+                } else {
+                    star.style.color = '#4a5568';
+                }
+            });
+        }
+
+        function resetStarHighlight(starRating) {
+            const currentRating = parseInt(starRating.dataset.rating);
+            const stars = starRating.querySelectorAll('.star');
+            
+            stars.forEach((star, index) => {
+                if (index < currentRating) {
+                    star.style.color = 'var(--star-color)';
+                    star.classList.add('active');
+                } else {
+                    star.style.color = '#4a5568';
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        // Contador de caracteres para observações
+        function updateCharCounter(textarea) {
+            const charCounter = textarea.parentElement.querySelector('.char-counter');
+            const currentLength = textarea.value.length;
+            const maxLength = textarea.maxLength;
+            
+            charCounter.textContent = `${currentLength}/${maxLength}`;
+            
+            if (currentLength > maxLength * 0.9) {
+                charCounter.style.color = 'var(--warning-color)';
+            } else {
+                charCounter.style.color = 'var(--text-secondary)';
+            }
+            
+            // Auto-save das observações
+            saveGamesToStorage();
+        }
+
+        // Marcar jogo como finalizado
+        function markAsFinished(button) {
+            const gameCard = button.closest(".game-card");
+            const toPlayColumn = document.getElementById("jogos-a-jogar");
+            const finishedColumn = document.getElementById("finalizados");
+            const gameDataFromCard = JSON.parse(gameCard.dataset.gameOriginalData);
+
+            if (gameCard.closest("#jogos-a-jogar")) {
+                // Remover status de jogando se estiver ativo
+                gameCard.classList.remove("currently-playing");
+                const playButton = gameCard.querySelector(".btn-playing");
+                if (playButton) {
+                    playButton.innerHTML = '<i class="fas fa-play"></i><span>Jogando</span>';
+                    playButton.classList.remove("active");
+                }
+                
+                // Get existing notes before recreating card
+                const existingNotes = gameCard.querySelector('.notes-textarea').value;
+
+                // Remove old card
+                toPlayColumn.removeChild(gameCard);
+
+                // Create new card as finished
+                const newGameCard = createGameCard(gameDataFromCard, true, 0, existingNotes);
+                finishedColumn.appendChild(newGameCard);
+                addMedal();
+
+                saveGamesToStorage();
+                updateEmptyStates();
+            }
+        }
+
+        // Toggle status de jogando
+        function togglePlaying(button) {
+            const gameCard = button.closest('.game-card');
+            const isPlaying = gameCard.classList.contains('currently-playing');
+            
+            if (isPlaying) {
+                gameCard.classList.remove('currently-playing');
+                button.innerHTML = '<i class="fas fa-play"></i><span>Jogando</span>';
+                button.classList.remove('active');
+            } else {
+                gameCard.classList.add('currently-playing');
+                button.innerHTML = '<i class="fas fa-pause"></i><span>Pausar</span>';
+                button.classList.add('active');
+            }
+            
+            saveGamesToStorage();
+        }
+
+        // Remover jogo
+        function removeGame(button) {
+            const gameCard = button.closest('.game-card');
+            const wasFinished = gameCard.closest('#finalizados') !== null;
+            
+            if (confirm('Tem certeza que deseja remover este jogo?')) {
+                if (wasFinished) {
+                    removeMedal();
+                }
+                gameCard.remove();
+                saveGamesToStorage();
+                updateEmptyStates();
+            }
+        }
+
+        // Drag and drop
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function dragEnter(event) {
+            event.preventDefault();
+            event.currentTarget.classList.add('drag-over');
+        }
+
+        function dragLeave(event) {
+            if (!event.currentTarget.contains(event.relatedTarget)) {
+                event.currentTarget.classList.remove('drag-over');
+            }
+        }
+
+        function drop(event, columnId) {
+            event.preventDefault();
+            event.currentTarget.classList.remove('drag-over');
+            
+            const gameId = event.dataTransfer.getData("text/plain");
+            const gameCard = document.querySelector(`.game-card[data-game-id="${gameId}"]`);
+
+            if (gameCard) {
+                const wasFinished = gameCard.closest('#finalizados') !== null;
+                const willBeFinished = columnId === 'finalizados';
+                
+                // Get existing data before moving/recreating card
+                const gameDataFromCard = JSON.parse(gameCard.dataset.gameOriginalData);
+                const existingNotes = gameCard.querySelector('.notes-textarea').value;
+                const existingRating = gameCard.querySelector('.star-rating') ? parseInt(gameCard.querySelector('.star-rating').dataset.rating) : 0;
+
+                // Remove old card from its current column
+                gameCard.remove();
+
+                // Create new card in the target column
+                let newGameCard;
+                if (willBeFinished) {
+                    newGameCard = createGameCard(gameDataFromCard, true, existingRating, existingNotes);
+                    addMedal(); // Only add medal if moving to finished
+                } else {
+                    newGameCard = createGameCard(gameDataFromCard, false, 0, existingNotes);
+                    if (wasFinished) { // Only remove medal if moving from finished
+                        removeMedal();
+                    }
+                }
+                document.getElementById(columnId).appendChild(newGameCard);
+                
+                saveGamesToStorage();
+                updateEmptyStates();
+            }
+        }
+
+        // Atualizar estados vazios
+        function updateEmptyStates() {
+            const toPlayColumn = document.getElementById('jogos-a-jogar');
+            const finishedColumn = document.getElementById('finalizados');
+            
+            const toPlayGames = toPlayColumn.querySelectorAll('.game-card');
+            const finishedGames = finishedColumn.querySelectorAll('.game-card');
+            
+            const emptyToPlay = document.getElementById('empty-to-play');
+            const emptyFinished = document.getElementById('empty-finished');
+            
+            emptyToPlay.style.display = toPlayGames.length === 0 ? 'block' : 'none';
+            emptyFinished.style.display = finishedGames.length === 0 ? 'block' : 'none';
+        }
+
+        // Salvar jogos no localStorage
+        function saveGamesToStorage() {
+            const games = {
+                toPlay: [],
+                finished: []
+            };
+
+            // Salvar jogos para jogar
+            const toPlayGames = document.querySelectorAll('#jogos-a-jogar .game-card');
+            toPlayGames.forEach(card => {
+                const gameData = JSON.parse(card.dataset.gameOriginalData || '{}');
+                const isPlaying = card.classList.contains('currently-playing');
+                const notes = card.querySelector('.notes-textarea').value;
+                
+                games.toPlay.push({ 
+                    ...gameData, 
+                    isPlaying, 
+                    notes 
+                });
+            });
+
+            // Salvar jogos finalizados
+            const finishedGames = document.querySelectorAll('#finalizados .game-card');
+            finishedGames.forEach(card => {
+                const gameData = JSON.parse(card.dataset.gameOriginalData || '{}');
+                const notes = card.querySelector('.notes-textarea').value;
+                const ratingElement = card.querySelector('.star-rating');
+                const rating = ratingElement ? parseInt(ratingElement.dataset.rating) : 0;
+                
+                games.finished.push({ 
+                    ...gameData, 
+                    notes, 
+                    rating 
+                });
+            });
+
+            localStorage.setItem("endgameGames", JSON.stringify(games));
+        }
+
+        // Carregar jogos do localStorage
+        function loadGamesFromStorage() {
+            const savedGames = localStorage.getItem('endgameGames');
+            if (!savedGames) return;
+
+            try {
+                const games = JSON.parse(savedGames);
+                
+                // Carregar jogos para jogar
+                if (games.toPlay) {
+                    games.toPlay.forEach(game => {
+                        const gameCard = createGameCard(game, false, 0, game.notes || '');
+                        if (game.isPlaying) {
+                            gameCard.classList.add('currently-playing');
+                            const playButton = gameCard.querySelector('.btn-playing');
+                            if (playButton) {
+                                playButton.innerHTML = '<i class="fas fa-pause"></i><span>Pausar</span>';
+                                playButton.classList.add('active');
+                            }
+                        }
+                        document.getElementById('jogos-a-jogar').appendChild(gameCard);
+                    });
+                }
+
+                // Carregar jogos finalizados
+                if (games.finished) {
+                    games.finished.forEach(game => {
+                        const gameCard = createGameCard(game, true, game.rating || 0, game.notes || '');
+                        document.getElementById('finalizados').appendChild(gameCard);
+                    });
+                }
+            } catch (error) {
+                console.error('Erro ao carregar jogos salvos:', error);
+            }
+        }
+
+        // Permitir busca com Enter
+        document.getElementById('searchInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                searchGame();
+            }
+        });
+
+        /* --- Modal Functions --- */
+        const gameDetailsModal = document.getElementById('gameDetailsModal');
+
+        function openModal(gameId) {
+            gameDetailsModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Prevent scrolling background
+            loadGameDetailsIntoModal(gameId);
+        }
+
+        function closeModal() {
+            gameDetailsModal.style.display = 'none';
+            document.body.style.overflow = ''; // Restore scrolling
+            // Clear previous content to avoid flickering on next open
+            document.getElementById('modalGameScreenshots').innerHTML = '';
+            document.getElementById('modalGameTrailers').innerHTML = '';
+            document.querySelector('.modal-screenshots-section').classList.add('hidden');
+            document.querySelector('.modal-trailers-section').classList.add('hidden');
+        }
+
+        // Close modal on click outside content
+        window.onclick = function(event) {
+            if (event.target == gameDetailsModal) {
+                closeModal();
+            }
+        }
+        
+        // Close modal on escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && gameDetailsModal.style.display === 'flex') {
+                closeModal();
+            }
+        });
+
+        async function loadGameDetailsIntoModal(gameId) {
+            try {
+                const gameUrl = `https://api.rawg.io/api/games/${gameId}?key=${API_KEY}`;
+                const screenshotsUrl = `https://api.rawg.io/api/games/${gameId}/screenshots?key=${API_KEY}`;
+                const moviesUrl = `https://api.rawg.io/api/games/${gameId}/movies?key=${API_KEY}`;
+
+                const [gameResponse, screenshotsResponse, moviesResponse] = await Promise.all([
+                    fetch(gameUrl),
+                    fetch(screenshotsUrl),
+                    fetch(moviesUrl)
+                ]);
+
+                const game = await gameResponse.json();
+                const screenshots = await screenshotsResponse.json();
+                const movies = await moviesResponse.json();
+
+                // Populate main details
+                document.getElementById('modalGameImage').src = game.background_image || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjI1MCIgdmlld0JveD0iMCAwIDIwMCAyNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjUwIiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjEwMCIgeT0iMTI1IiBmaWxsPSIjNjY2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiPkludW1hZ2luYXZlbDwvdGV4dD4KPC9zdmc+';
+                document.getElementById('modalGameTitle').textContent = game.name;
+                document.getElementById('modalGameReleased').textContent = game.released || 'N/A';
+                document.getElementById('modalGameMetacritic').textContent = game.metacritic || 'N/A';
+                document.getElementById('modalGameDevelopers').textContent = game.developers && game.developers.length > 0 ? game.developers.map(d => d.name).join(', ') : 'N/A';
+                document.getElementById('modalGamePublishers').textContent = game.publishers && game.publishers.length > 0 ? game.publishers.map(p => p.name).join(', ') : 'N/A';
+                document.getElementById('modalGameDescription').textContent = game.description_raw || 'Descrição não disponível';
+
+                // Populate Genres
+                const genresContainer = document.getElementById('modalGameGenres');
+                genresContainer.innerHTML = '';
+                if (game.genres && game.genres.length > 0) {
+                    game.genres.forEach(genre => {
+                        const span = document.createElement('span');
+                        span.classList.add('modal-genre-tag');
+                        span.textContent = genre.name;
+                        genresContainer.appendChild(span);
+                    });
+                } else {
+                    genresContainer.innerHTML = '<span class="modal-detail-value">N/A</span>';
+                }
+
+                // Populate Platforms
+                const platformsContainer = document.getElementById('modalGamePlatforms');
+                platformsContainer.innerHTML = '';
+                if (game.platforms && game.platforms.length > 0) {
+                    game.platforms.forEach(p => {
+                        const span = document.createElement('span');
+                        span.classList.add('modal-platform-tag');
+                        span.textContent = p.platform.name;
+                        platformsContainer.appendChild(span);
+                    });
+                } else {
+                    platformsContainer.innerHTML = '<span class="modal-detail-value">N/A</span>';
+                }
+
+                // Populate Screenshots
+                const screenshotsContainer = document.getElementById('modalGameScreenshots');
+                screenshotsContainer.innerHTML = '';
+                const screenshotsSection = document.querySelector('.modal-screenshots-section');
+                if (screenshots.results && screenshots.results.length > 0) {
+                    screenshots.results.slice(0, 6).forEach(screen => { // Limit to 6 screenshots
+                        const img = document.createElement('img');
+                        img.src = screen.image;
+                        img.alt = 'Screenshot';
+                        img.classList.add('modal-screenshot-item');
+                        screenshotsContainer.appendChild(img);
+                    });
+                    screenshotsSection.classList.remove('hidden');
+                } else {
+                    screenshotsSection.classList.add('hidden');
+                }
+
+                // Populate Trailers
+                const trailersContainer = document.getElementById('modalGameTrailers');
+                trailersContainer.innerHTML = '';
+                const trailersSection = document.querySelector('.modal-trailers-section');
+                if (movies.results && movies.results.length > 0) {
+                    movies.results.slice(0, 3).forEach(movie => { // Limit to 3 trailers
+                        if (movie.data && movie.data.max) {
+                            const videoPlayer = document.createElement('video');
+                            videoPlayer.src = movie.data.max;
+                            videoPlayer.controls = true;
+                            videoPlayer.classList.add('modal-trailer-item');
+                            trailersContainer.appendChild(videoPlayer);
+                        } else if (movie.preview) {
+                            const img = document.createElement('img');
+                            img.src = movie.preview;
+                            img.alt = 'Trailer Preview';
+                            img.classList.add('modal-screenshot-item');
+                            trailersContainer.appendChild(img);
+                        }
+                    });
+                    trailersSection.classList.remove('hidden');
+                } else {
+                    trailersSection.classList.add('hidden');
+                }
+
+            } catch (error) {
+                console.error('Erro ao carregar detalhes do jogo para o modal:', error);
+                alert('Não foi possível carregar os detalhes completos deste jogo.');
+            }
+        }
+
+        /* --- General Suggestions Section Functions --- */
+        async function loadGeneralSuggestions() {
+            const suggestedGamesGrid = document.getElementById('generalSuggestedGamesGrid');
+            const emptySuggestions = document.getElementById('empty-general-suggestions');
+            suggestedGamesGrid.innerHTML = ''; // Limpa as sugestões anteriores
+            emptySuggestions.style.display = 'block'; // Mostra o estado de carregamento
+
+            try {
+                // Fetch a larger pool of popular games (e.g., 50)
+                // We keep the ordering to ensure we're still getting 'good' games,
+                // but we'll randomize from this larger set.
+                const suggestionsUrl = `https://api.rawg.io/api/games?ordering=-rating,-released&page_size=50&key=${API_KEY}`;
+                const suggestionsResponse = await fetch(suggestionsUrl);
+                const suggestionsData = await suggestionsResponse.json();
+
+                if (suggestionsData.results && suggestionsData.results.length > 0) {
+                    emptySuggestions.style.display = 'none'; // Esconde o estado de carregamento
+
+                    // Shuffle the results and take the first 10
+                    const shuffledGames = suggestionsData.results.sort(() => 0.5 - Math.random());
+                    const gamesToDisplay = shuffledGames.slice(0, 10); // Take top 10 random games
+
+                    if (gamesToDisplay.length > 0) {
+                        gamesToDisplay.forEach(suggestedGame => {
+                            const suggestionCard = document.createElement('div');
+                            suggestionCard.classList.add('suggestion-card');
+                            // Add a data attribute for gameId so addSuggestedGameToToPlay can use it
+                            suggestionCard.dataset.gameId = suggestedGame.id;
+                            suggestionCard.innerHTML = `
+                                <img src="${suggestedGame.background_image || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDIwMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMTIwIiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjEwMCIgeT0iNjAiIGZpbGw9IiM2NjYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiI+SW1hZ2VtIG7Do28gZW5jb250cmFkYTwvdGV4dD4KPC9zdmc+'}
+                                    " alt="${suggestedGame.name}" class="suggestion-image">
+                                <div class="suggestion-title">${suggestedGame.name}</div>
+                                <button class="suggestion-add-button" data-game-id="${suggestedGame.id}" onclick="addSuggestedGameToToPlay(this)">Adicionar</button>
+                            `;
+                            // Make suggestion cards open modal on click
+                            suggestionCard.addEventListener('click', function(event) {
+                                if (event.target.closest('.suggestion-add-button')) {
+                                    return; // Não abre o modal se o botão de adicionar for clicado
+                                }
+                                openModal(suggestedGame.id);
+                            });
+
+                            suggestedGamesGrid.appendChild(suggestionCard);
+                        });
+                    } else {
+                         // Fallback if after shuffle no games are left (shouldn't happen with page_size=50)
+                        emptySuggestions.style.display = 'block';
+                        emptySuggestions.innerHTML = `
+                            <i class="fas fa-exclamation-circle"></i>
+                            <p>Nenhuma sugestão encontrada.</p>
+                        `;
+                    }
+                } else {
+                    emptySuggestions.style.display = 'block';
+                    emptySuggestions.innerHTML = `
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Nenhuma sugestão encontrada.</p>
+                    `;
+                }
+            } catch (error) {
+                console.error('Erro ao buscar sugestões de jogos gerais:', error);
+                emptySuggestions.style.display = 'block';
+                emptySuggestions.innerHTML = `
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>Erro ao carregar sugestões. Verifique sua conexão ou a chave da API.</p>
+                `;
+            }
+        }
+
+        async function addSuggestedGameToToPlay(button) {
+            const gameId = button.dataset.gameId;
+            const url = `https://api.rawg.io/api/games/${gameId}?key=${API_KEY}`;
+            button.disabled = true;
+            button.textContent = 'Adicionando...';
+
+            try {
+                const response = await fetch(url);
+                const game = await response.json();
+                const gameData = {
+                    id: game.id,
+                    name: game.name,
+                    image: game.background_image,
+                    description: game.description_raw || 'Descrição não disponível',
+                    released: game.released || 'Data não disponível',
+                    rating: game.rating || 0,
+                    metacritic: game.metacritic || 'N/A',
+                    genres: game.genres ? game.genres.map(g => g.name) : [],
+                    platforms: game.platforms ? game.platforms.map(p => p.platform.name) : [],
+                    developers: game.developers ? game.developers.map(d => d.name) : [],
+                    publishers: game.publishers ? game.publishers.map(p => p.name) : [] // Corrected 'p.publishers' to 'game.publishers'
+                };
+                
+                addGameToColumn(gameData, 'jogos-a-jogar');
+                button.textContent = 'Adicionado!';
+                button.style.backgroundColor = 'var(--success-color)';
+                button.style.cursor = 'default';
+            } catch (error) {
+                console.error('Erro ao adicionar jogo sugerido:', error);
+                alert('Erro ao adicionar jogo sugerido. Tente novamente.');
+                button.textContent = 'Adicionar';
+                button.disabled = false;
+                button.style.backgroundColor = 'var(--accent-color)';
+                button.style.cursor = 'pointer';
+            }
+        }
+
+    </script>
+</body>
+</html>
